@@ -1,0 +1,28 @@
+# Visual Studio Build Files
+.vs/
+x64/
+x86/
+Debug/
+Release/
+*.obj
+*.exe
+*.pdb
+*.ipch
+*.user
+*.suo
+
+# Deep Learning Models (Too large for GitHub)
+*.onnx
+*.trt
+*.engine
+
+# Datasets & Outputs
+*.jpg
+*.png
+*.bmp
+output_cpp/
+pre-proc/
+
+# Dependencies (Libraries should be installed, not committed)
+*.dll
+*.lib
