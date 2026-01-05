@@ -437,7 +437,7 @@ int main() {
     std::string modelDir = "E:\\ONNX_TO_TRT\\";
     std::string detPath = modelDir + "det_model_dynamic.trt";
     std::string clsPath = modelDir + "cls_model.trt";
-    std::string recPath = modelDir + "rec_model.trt"; // Static 320
+    std::string recPath = modelDir + "rec_model_dynamic.trt"; // Dynamic Shape
 
     std::string dictPath = R"(E:\DL_SW\athenapaddleocr\athenapaddleocr\ppocr\utils\dict\ppocrv5_dict.txt)";
     std::string imgDir = "E:\\DL_SW\\athenapaddleocr\\msb_combined_data";
