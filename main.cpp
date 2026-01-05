@@ -397,23 +397,32 @@ std::vector<std::vector<cv::Point>> PostprocessDet(const std::vector<float>& pre
     return boxes;
 }
 
-cv::Mat GetRotateCropImage(const cv::Mat& img, std::vector<cv::Point> box) {
+cv::Mat GetRotateCropImage(const cv::Mat& img, std::vector<cv::Point> box, float margin_ratio = 1.2f) {
     cv::Point2f pts[4];
     for (int i = 0; i < 4; i++) pts[i] = cv::Point2f((float)box[i].x, (float)box[i].y);
 
     float width = std::max(norm(pts[0] - pts[1]), norm(pts[2] - pts[3]));
     float height = std::max(norm(pts[0] - pts[3]), norm(pts[1] - pts[2]));
 
+    float margin_w = width * (margin_ratio - 1.0f) * 0.5f;
+    float margin_h = height * (margin_ratio - 1.0f) * 0.5f;
+
+    int target_w = (int)(width + margin_w * 2);
+    int target_h = (int)(height + margin_h * 2);
+
     cv::Point2f dstPts[4] = {
-        {0.0f, 0.0f},
-        {width, 0.0f},
-        {width, height},
-        {0.0f, height}
+        {margin_w, margin_h},
+        {width + margin_w, margin_h},
+        {width + margin_w, height + margin_h},
+        {margin_w, height + margin_h}
     };
 
     cv::Mat M = cv::getPerspectiveTransform(pts, dstPts);
     cv::Mat dst;
-    cv::warpPerspective(img, dst, M, cv::Size((int)width, (int)height), cv::INTER_CUBIC, cv::BORDER_REPLICATE);
+
+    // 이미지를 사이즈를 벗어나도 에러가 나지 않고, 깔끔한 검은 테두리가 생깁니다.
+    cv::warpPerspective(img, dst, M, cv::Size(target_w, target_h),
+        cv::INTER_CUBIC, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
 
     if ((float)dst.rows / (float)dst.cols >= 1.5) {
         cv::rotate(dst, dst, cv::ROTATE_90_CLOCKWISE);
@@ -431,7 +440,6 @@ int main() {
     std::string recPath = modelDir + "rec_model.trt"; // Static 320
 
     std::string dictPath = R"(E:\DL_SW\athenapaddleocr\athenapaddleocr\ppocr\utils\dict\ppocrv5_dict.txt)";
-    /*std::string imgDir = "E:\\DL_SW\\athenapaddleocr\\underkill";*/
     std::string imgDir = "E:\\DL_SW\\athenapaddleocr\\msb_combined_data";
     std::string outDir = "./output_cpp";
 
@@ -494,7 +502,7 @@ int main() {
         int box_idx = 0;
         for (const auto& box : boxes) {
             // Rec/Cls 전처리에 BGR Crop 그대로 사용
-            cv::Mat crop = GetRotateCropImage(frame, box);
+            cv::Mat crop = GetRotateCropImage(frame, box, 1.1f);
 
             // Cls
             std::string clsDebugPath = outDir + "/pre-proc/cls_pre_" + fileNameOnly + "_" + to_string(box_idx) + ".bmp";
