@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="paddle_ocr_inference.vcxproj" />
+  <Project Path="paddle_ocr_inference.vcxproj" Id="56c5e0f1-2b40-4a4b-9506-aab8b96f25f4" />
 </Solution>

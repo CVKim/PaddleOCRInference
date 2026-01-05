@@ -431,6 +431,7 @@ int main() {
     std::string recPath = modelDir + "rec_model.trt"; // Static 320
 
     std::string dictPath = R"(E:\DL_SW\athenapaddleocr\athenapaddleocr\ppocr\utils\dict\ppocrv5_dict.txt)";
+    /*std::string imgDir = "E:\\DL_SW\\athenapaddleocr\\underkill";*/
     std::string imgDir = "E:\\DL_SW\\athenapaddleocr\\msb_combined_data";
     std::string outDir = "./output_cpp";
 
@@ -454,6 +455,20 @@ int main() {
         std::cout << "Processing: " << imgPath << std::endl;
         cv::Mat frame = cv::imread(imgPath);
         if (frame.empty()) continue;
+
+
+        // test
+        cv::Mat lab_image;
+        cv::cvtColor(frame, lab_image, cv::COLOR_BGR2Lab); // LAB 색공간 변환
+
+        std::vector<cv::Mat> lab_planes(3);
+        cv::split(lab_image, lab_planes);
+
+        auto clahe = cv::createCLAHE(4.0, cv::Size(8, 8));
+        clahe->apply(lab_planes[0], lab_planes[0]);
+
+        cv::merge(lab_planes, lab_image);
+        cv::cvtColor(lab_image, frame, cv::COLOR_Lab2BGR); // 다시 BGR로 변환
 
         std::string fileNameOnly = fs::path(imgPath).filename().string();
 
