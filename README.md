@@ -7,6 +7,12 @@ This repository provides a **High-Performance C++ Inference** pipeline for Paddl
 
 Unlike many other C++ implementations, this project focuses on **100% logic synchronization with the original PaddleOCR Python implementation**. It ensures pixel-level accuracy alignment by strictly following Python's preprocessing (resize, normalization, padding) and postprocessing (box ordering, un-clipping) logic.
 
+<img width="1296" height="188" alt="image" src="https://github.com/user-attachments/assets/85bb0f2e-dfbb-49c5-98f1-bd794ae45eb5" />
+
+
+<img width="1414" height="153" alt="image" src="https://github.com/user-attachments/assets/f2e33f84-dd6b-417c-bdc0-caee55b8b863" />
+
+
 ## 🚀 Key Features
 
 * **⚡ TensorRT Acceleration:** Extremely fast inference on NVIDIA GPUs.
